@@ -8,9 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,10 +18,10 @@ import com.example.ototocarsrentingapp.auth.Validator.ValidationResult;
 import com.example.ototocarsrentingapp.auth.ViewModel.SignUpViewModel;
 
 
-public class SignUp3Fragment extends Fragment {
-    private static final String TAG = "SignUp3Fragment";
+public class SignUp3AddressFragment extends Fragment {
+    private static final String TAG = "SignUp3AddressFragment";
 
-    public SignUp3Fragment() {
+    public SignUp3AddressFragment() {
         super(R.layout.fragment_sign_up3);
     }
 
@@ -35,12 +33,14 @@ public class SignUp3Fragment extends Fragment {
         Log.d(TAG,"onViewCreated successful");
         //חיבור בין הviews של הXML לjava
         EditText city = view.findViewById(R.id.city);
+        EditText address = view.findViewById(R.id.address);
         Button btnNext = view.findViewById(R.id.btnNext);
         TextView tvValidationMessage = view.findViewById(R.id.tvValidationMessage);
 
         //חיבור לSign Up view model
         SignUpViewModel vm = new ViewModelProvider(requireActivity()).get(SignUpViewModel.class);
 
+        //האזנה לעיר
         vm.getCity().observe(getViewLifecycleOwner(), city1 ->{
             if(city1==null){
                 return;
@@ -53,17 +53,48 @@ public class SignUp3Fragment extends Fragment {
             }
         });
 
+        //האזנה לכתובת
+        vm.getAddress().observe(getViewLifecycleOwner(), addres ->{
+            if(addres==null){
+                return;
+            }
+            String current = address.getText().toString();
+            if(!current.equals(addres)){//בדיקה האם הערך שהמשתמש הקליד זהה לערך בview model
+                address.setText(addres);
+                address.setSelection(addres.length());
+                Log.d(TAG,"addres was updated by the view model");
+            }
+        });
+
         btnNext.setOnClickListener(v -> {
+            //בדיקה שהcity תקין
             ValidationResult result= vm.setCity(city.getText().toString());
             if(!result.getIsValid()){
                 Log.d(TAG,"city is not valid");
                 tvValidationMessage.setText(result.getErrorMessage());
                 tvValidationMessage.setVisibility(View.VISIBLE);
+                city.requestFocus();
+                return;
             }
             else{
                 Log.d(TAG,"city is valid");
-                vm.onNext();
+                tvValidationMessage.setVisibility(View.GONE);
             }
+            //בדיקה שהaddress תקין
+            ValidationResult result1 = vm.setAddress(address.getText().toString());
+            if(!result1.getIsValid()){
+                Log.d(TAG,"address is not valid");
+                tvValidationMessage.setText(result1.getErrorMessage());
+                tvValidationMessage.setVisibility(View.VISIBLE);
+                address.requestFocus();
+                return;
+            }
+            else{
+                Log.d(TAG,"address is valid");
+                tvValidationMessage.setVisibility(View.GONE);
+            }
+            //אפשר לעבור קדימה חיים שלי
+            vm.onNext();
         });
 
     }

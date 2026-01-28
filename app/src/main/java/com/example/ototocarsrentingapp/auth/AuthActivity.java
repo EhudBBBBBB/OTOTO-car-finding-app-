@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.ototocarsrentingapp.R;
 import com.example.ototocarsrentingapp.auth.ViewModel.SignUpViewModel;
 
-import com.example.ototocarsrentingapp.auth.fragments.SignUp1Fragment;
-import com.example.ototocarsrentingapp.auth.fragments.SignUp3Fragment;
-import com.example.ototocarsrentingapp.auth.fragments.SignUpFragment2;
+import com.example.ototocarsrentingapp.auth.fragments.SignUp1PersonalInfoFragment;
+import com.example.ototocarsrentingapp.auth.fragments.SignUp3AddressFragment;
+import com.example.ototocarsrentingapp.auth.fragments.SignUp2PasswordFragment;
 
 public class AuthActivity extends AppCompatActivity {
     private static final String TAG = "AuthActivity";
@@ -36,17 +36,17 @@ public class AuthActivity extends AppCompatActivity {
 
             switch(state){//ייצור fragment לפי הstate
                case PERSONAL_DETAILS:
-                   fragmnet = new SignUp1Fragment();
+                   fragmnet = new SignUp1PersonalInfoFragment();
                    break;
                case PASSWORD_DETAILS:
-                   fragmnet = new SignUpFragment2();
+                   fragmnet = new SignUp2PasswordFragment();
                    break;
                 case ADDRESS_DETAILS:
-                    fragmnet = new SignUp3Fragment();
+                    fragmnet = new SignUp3AddressFragment();
                     break;
                case REVIEW_DETAILS:
                 default:
-                    fragmnet = new SignUp1Fragment();
+                    fragmnet = new SignUp1PersonalInfoFragment();
             }
             getSupportFragmentManager()
                     .beginTransaction()

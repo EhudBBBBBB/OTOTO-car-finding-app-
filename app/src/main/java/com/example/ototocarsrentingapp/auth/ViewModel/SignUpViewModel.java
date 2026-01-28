@@ -23,7 +23,7 @@ public class SignUpViewModel extends ViewModel {
     private final MutableLiveData<String> last_name = new MutableLiveData<>();//שם משפחה
     private final MutableLiveData<String> birth_date = new MutableLiveData<>();//תאריך לידה
     private final MutableLiveData<String> email = new MutableLiveData<>();//אמייל
-    private final MutableLiveData<Integer> phone_number = new MutableLiveData<>();//מספר טלפון
+    private final MutableLiveData<String> phone_number = new MutableLiveData<>();//מספר טלפון
     private final MutableLiveData<String> address = new MutableLiveData<>();//כתובת
     private final MutableLiveData<String> city = new MutableLiveData<>();//עיר
     private final MutableLiveData<String> password = new MutableLiveData<>();//סיסמה
@@ -98,10 +98,10 @@ public class SignUpViewModel extends ViewModel {
     //נתונים שצריכים להיות לכל USER
 
     //First name
-    public ValidationResult setFirsName(String first_name) {
+    public ValidationResult setFirstName(String first_name) {
         ValidationResult result = Validator.validateFirstName(first_name);
         if(result.getIsValid()){
-            this.first_name.setValue(first_name);
+            this.first_name.postValue(first_name);
             Log.d(TAG,"first name was changed in the view model");
         }
        return result;
@@ -111,16 +111,25 @@ public class SignUpViewModel extends ViewModel {
     }
 
     //Last name
-    public void set_last_name(String last_name) {
-        this.last_name.setValue(last_name);
+    public ValidationResult set_last_name(String last_name) {
+        ValidationResult result = Validator.validateLastName(last_name);
+        if(result.getIsValid()){
+            this.last_name.postValue(last_name);
+            Log.d(TAG,"Last name was changed in the view model");
+        }
+        return result;
     }
     public LiveData<String> get_last_name() {
         return last_name;
     }
 
     //Email
-    public void set_email(String email) {
-        this.email.setValue(email);
+    public ValidationResult set_email(String email) {
+        ValidationResult result = Validator.validateEmail(email);
+        if(result.getIsValid()){
+            this.email.postValue(email);
+        }
+        return result;
     }
     public LiveData<String> get_email() {
         return email;
@@ -130,7 +139,7 @@ public class SignUpViewModel extends ViewModel {
     public ValidationResult  setPassword(String value){
         ValidationResult result = Validator.validatePassword(value);
         if(result.getIsValid()){
-            this.password.setValue(value);
+            this.password.postValue(value);
             Log.d(TAG,"password was changed in the view model");
         }
             return result;
@@ -141,24 +150,32 @@ public class SignUpViewModel extends ViewModel {
     }
 
     //confirmpassword
-    public void setConfirmPassword(String value){
-        this.confirm_password.setValue(value);
+    public ValidationResult setConfirmPassword(String password, String confirmPassword){
+        ValidationResult result = Validator.validateConfirmPassword(password,confirmPassword);
+        if(result.getIsValid()){
+            this.confirm_password.postValue(confirmPassword);
+        }
+        return result;
     }
     public LiveData<String>getConfirmPassword(){
         return this.confirm_password;
     }
 
     //phone number
-    public LiveData<Integer>getPhoneNumber(){
+    public LiveData<String>getPhoneNumber(){
         return this.phone_number;
     }
 
     //כתובת
-    public LiveData<String>getAddres(){
+    public LiveData<String> getAddress(){
         return this.address;
     }
-    public void setAddress(String value){
-        this.address.setValue(value);
+    public ValidationResult setAddress(String value){
+        ValidationResult result = Validator.validateAddress(value);
+        if(result.getIsValid()){
+            this.address.postValue(value);
+        }
+        return result;
     }
 
     //עיר
@@ -168,7 +185,7 @@ public class SignUpViewModel extends ViewModel {
     public ValidationResult setCity(String value){
         ValidationResult result = Validator.validateCity(value);
         if(result.getIsValid()){
-            this.city.setValue(value);
+            this.city.postValue(value);
         }
       return result;
     }
@@ -197,18 +214,4 @@ public class SignUpViewModel extends ViewModel {
         this.currentState.postValue(value);
         Log.d(TAG,"The state was changed to"+value+"  in the view model");
     }
-
-
-
-
-
-    //מתודה שבודקת האם password וconfirmPassword זהים
-    private void validateConfirmPassword(){
-        ValidationResult result = Validator.validateConfirmPassword(password.getValue(),confirm_password.getValue());
-        this.is_password_valid.setValue(result);
-    }
-
-    
-
-
 }
