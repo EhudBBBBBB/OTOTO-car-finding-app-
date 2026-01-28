@@ -38,8 +38,8 @@ public class SignUp1PersonalInfoFragment extends Fragment {
         EditText etFirstName = view.findViewById(R.id.etFirstName);//שם פרטי
         EditText etLastName = view.findViewById(R.id.etLastName);//שם משפחה
         EditText etEmail = view.findViewById(R.id.etEmail);//אימייל
-        EditText etPassword = view.findViewById(R.id.etPassword);
-        EditText etConfirmPassword = view.findViewById(R.id.etConfirmPassword);
+        EditText etPassword = view.findViewById(R.id.etPassword);//סיסמה
+        EditText etConfirmPassword = view.findViewById(R.id.etConfirmPassword);//אישור סיסמה
 
 
         Button btnNext = view.findViewById(R.id.btnNext);

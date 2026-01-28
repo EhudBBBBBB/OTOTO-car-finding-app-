@@ -62,9 +62,6 @@ public class SignUpViewModel extends ViewModel {
         }
         switch (step){
             case PERSONAL_DETAILS:
-                currentState.postValue(SignUpStep.PASSWORD_DETAILS);
-                break;
-            case PASSWORD_DETAILS:
                 currentState.postValue(SignUpStep.ADDRESS_DETAILS);
                 break;
             case ADDRESS_DETAILS:
