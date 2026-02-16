@@ -3,19 +3,14 @@ package com.example.ototocarsrentingapp.model;
 public class Seller extends User  {
     private Car car;
 
-    public Seller(Builder builder) {
-        super(builder);
-        this.car = builder.car;
+    public Seller(String firstName,
+                  String lastName,
+                  String email,
+                  String address,
+                  String city,
+                  UserType userType,Car c) {
+        super(firstName,lastName,email,address,city);
+        this.car = c;
     }
-    public static class Builder extends User.Builder{
-        private Car car;
 
-        public Builder setCar(Car car) {
-            this.car=car;
-            return this;
-        }
-        public Seller build(){
-            return new Seller(this);
-        }
-    }
 }

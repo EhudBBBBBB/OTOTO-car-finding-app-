@@ -18,11 +18,11 @@ import com.example.ototocarsrentingapp.auth.Validator.ValidationResult;
 import com.example.ototocarsrentingapp.auth.ViewModel.SignUpViewModel;
 
 
-public class SignUp3AddressFragment extends Fragment {
-    private static final String TAG = "SignUp3AddressFragment";
+public class SignUp2AddressFragment extends Fragment {
+    private static final String TAG = "SignUp2AddressFragment";
 
-    public SignUp3AddressFragment() {
-        super(R.layout.fragment_sign_up3);
+    public SignUp2AddressFragment() {
+        super(R.layout.fragment_sign_up2_addrees_info);
     }
 
 
@@ -36,6 +36,7 @@ public class SignUp3AddressFragment extends Fragment {
         EditText address = view.findViewById(R.id.address);
         Button btnNext = view.findViewById(R.id.btnNext);
         TextView tvValidationMessage = view.findViewById(R.id.tvValidationMessage);
+        Button btnBack = view.findViewById(R.id.btnBack);
 
         //חיבור לSign Up view model
         SignUpViewModel vm = new ViewModelProvider(requireActivity()).get(SignUpViewModel.class);
@@ -93,9 +94,13 @@ public class SignUp3AddressFragment extends Fragment {
                 Log.d(TAG,"address is valid");
                 tvValidationMessage.setVisibility(View.GONE);
             }
-            //אפשר לעבור קדימה חיים שלי
+            //אפשר לעבור קדימה
             vm.onNext();
         });
 
+        //לחיצה על הכפתור אחורה[
+        btnBack.setOnClickListener(v -> {
+            vm.onBack();
+        });
     }
 }

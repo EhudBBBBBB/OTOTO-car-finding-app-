@@ -12,7 +12,10 @@ import com.example.ototocarsrentingapp.R;
 import com.example.ototocarsrentingapp.auth.ViewModel.SignUpViewModel;
 
 import com.example.ototocarsrentingapp.auth.fragments.SignUp1PersonalInfoFragment;
-import com.example.ototocarsrentingapp.auth.fragments.SignUp3AddressFragment;
+import com.example.ototocarsrentingapp.auth.fragments.SignUp2AddressFragment;
+import com.example.ototocarsrentingapp.auth.fragments.SignUp3UserTypeFragment;
+import com.example.ototocarsrentingapp.auth.fragments.renter.SignUp4RenterInfoFragment;
+import com.example.ototocarsrentingapp.auth.fragments.seller.SignUp5SellerInfoFragment;
 
 public class AuthActivity extends AppCompatActivity {
     private static final String TAG = "AuthActivity";
@@ -38,9 +41,17 @@ public class AuthActivity extends AppCompatActivity {
                    fragmnet = new SignUp1PersonalInfoFragment();
                    break;
                 case ADDRESS_DETAILS:
-                    fragmnet = new SignUp3AddressFragment();
+                    fragmnet = new SignUp2AddressFragment();
                     break;
-               case REVIEW_DETAILS:
+                case UserType:
+                    fragmnet = new SignUp3UserTypeFragment();
+                    break;
+                case RENTER_DETAILS:
+                    fragmnet = new SignUp4RenterInfoFragment();
+                    break;
+                case SELLER_DETAILS:
+                    fragmnet = new SignUp5SellerInfoFragment();
+                    break;
                 default:
                     fragmnet = new SignUp1PersonalInfoFragment();
             }

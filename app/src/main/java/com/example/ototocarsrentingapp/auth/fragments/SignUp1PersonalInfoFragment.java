@@ -24,7 +24,7 @@ public class SignUp1PersonalInfoFragment extends Fragment {
 
 
     public SignUp1PersonalInfoFragment() {
-        super(R.layout.fragment_sign_up1);
+        super(R.layout.fragment_sign_up1_personal_info);
     }
 
 
