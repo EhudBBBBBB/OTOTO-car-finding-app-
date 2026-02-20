@@ -1,4 +1,4 @@
-package com.example.ototocarsrentingapp.auth.fragments;
+package com.example.ototocarsrentingapp.auth.fragments.User;
 
 import android.os.Bundle;
 
@@ -33,6 +33,10 @@ public class SignUp3UserTypeFragment extends Fragment {
         Button btnRenter = view.findViewById(R.id.btnRenter);
         Button btnSeller = view.findViewById(R.id.btnSeller);
         Button btnBack = view.findViewById(R.id.btnBack);
+
+        //יצירה משתמש חדש בFirebase Authentication
+        vm.createUser();
+        Log.d(TAG,"user was created successfully");
 
         //מעבר לדף משכיר
         btnRenter.setOnClickListener(v -> {

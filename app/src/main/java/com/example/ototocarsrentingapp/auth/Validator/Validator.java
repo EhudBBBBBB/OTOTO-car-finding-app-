@@ -4,12 +4,21 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.ototocarsrentingapp.model.CarManufacturer;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Validator {
+    // Map שמכיל את כל הדגמים לפי יצרן
+    private static final Map<CarManufacturer, List<String>> validModelsByMake = new HashMap<>();
+
     //"^" אומר שהבדיקה מתחילה מהתו הראשון
     //"[]" קבוצת תווים שיכולה להפויעA-Z
     //"$" סוף המחרוזת
@@ -45,7 +54,6 @@ public class Validator {
     private static final String cityRegex = "^[א-ת\\s]{2,50}$";
 
     // מיקוד: 5 ספרות
-    private static final String POSTCODE_REGEX = "^[0-9]{5}$";
 
     // סיסמה חזקה: לפחות 8 תווים, אות גדולה, ספרה, תו מיוחד, ללא רווחים
     private static final String passwordRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=\\S+$).{8,}$";
@@ -63,7 +71,7 @@ public class Validator {
     // קילומטרים: מספר שלם חיובי (לא מתחיל ב־0)
     public static final String KILOMETERS_REGEX = "^[1-9]\\d*(?:[.,]\\d+)*$";
     // מספר מושבים: ספרה אחת בין 1 ל־9
-    public static final String SEATS_NUMBER_REGEX = "^[1-9]$";
+    public static final String SEATS_NUMBER_REGEX = "^[1-7]$";
 
     // שנת רכב: טווח סביר של שנים (1950–2029)
     public static final String YEAR_REGEX = "^(19[5-9]\\d|20[0-2]\\d)$";
@@ -296,5 +304,199 @@ public class Validator {
         }
         return new ValidationResult(null, true);
     }
+    //בדיקה שמספר הכיסאות תקין
+    public static ValidationResult validateSeatsNumbers(String capacity) {
+        if (capacity == null) {
+            return new ValidationResult("נא להזין מספר כיסאות", false);
+        }
 
+        capacity = capacity.trim();
+
+        if (capacity.isEmpty()) {
+            return new ValidationResult("נא להזין מספר כיסאות", false);
+        }
+        if (!capacity.matches(SEATS_NUMBER_REGEX)) {
+            return new ValidationResult("נא להזין מספר כיסאות תקין (ספרה חיובית בלבד)", false);
+        }
+        return new ValidationResult(null, true);
+    }
+
+    //-----------------------------------------------------------------------------
+    //טעינת ערכים קבועים לתוך מבנה הנתונים MAP
+    // static block – נטען פעם אחת בלבד
+
+    static {
+
+        validModelsByMake.put(CarManufacturer.FIAT, Arrays.asList(
+                "500",
+                "Panda",
+                "Punto",
+                "Tipo",
+                "Doblo"
+        ));
+
+        validModelsByMake.put(CarManufacturer.SUZUKI, Arrays.asList(
+                "Swift",
+                "Baleno",
+                "Vitara",
+                "SX4",
+                "Jimny"
+        ));
+
+        validModelsByMake.put(CarManufacturer.TOYOTA, Arrays.asList(
+                "Corolla",
+                "Yaris",
+                "Camry",
+                "RAV4",
+                "Prius",
+                "C-HR"
+        ));
+
+        validModelsByMake.put(CarManufacturer.HYUNDAI, Arrays.asList(
+                "i10",
+                "i20",
+                "i30",
+                "Elantra",
+                "Tucson",
+                "Kona"
+        ));
+
+        validModelsByMake.put(CarManufacturer.KIA, Arrays.asList(
+                "Picanto",
+                "Rio",
+                "Ceed",
+                "Sportage",
+                "Sorento"
+        ));
+
+        validModelsByMake.put(CarManufacturer.SKODA, Arrays.asList(
+                "Fabia",
+                "Octavia",
+                "Superb",
+                "Kodiaq"
+        ));
+
+        validModelsByMake.put(CarManufacturer.VOLKSWAGEN, Arrays.asList(
+                "Polo",
+                "Golf",
+                "Passat",
+                "Tiguan"
+        ));
+
+        validModelsByMake.put(CarManufacturer.MAZDA, Arrays.asList(
+                "2",
+                "3",
+                "6",
+                "CX-3",
+                "CX-5"
+        ));
+
+        validModelsByMake.put(CarManufacturer.HONDA, Arrays.asList(
+                "Civic",
+                "Accord",
+                "Jazz",
+                "CR-V"
+        ));
+
+        validModelsByMake.put(CarManufacturer.FORD, Arrays.asList(
+                "Fiesta",
+                "Focus",
+                "Mondeo",
+                "Escape"
+        ));
+
+        validModelsByMake.put(CarManufacturer.CHEVROLET, Arrays.asList(
+                "Spark",
+                "Cruze",
+                "Malibu"
+        ));
+
+        validModelsByMake.put(CarManufacturer.BMW, Arrays.asList(
+                "116i",
+                "118i",
+                "320i",
+                "X1",
+                "X3",
+                "X5"
+        ));
+
+        validModelsByMake.put(CarManufacturer.MERCEDES, Arrays.asList(
+                "A-Class",
+                "C-Class",
+                "E-Class",
+                "GLA",
+                "GLC"
+        ));
+
+        validModelsByMake.put(CarManufacturer.AUDI, Arrays.asList(
+                "A1",
+                "A3",
+                "A4",
+                "A6",
+                "Q3",
+                "Q5"
+        ));
+
+        validModelsByMake.put(CarManufacturer.TESLA, Arrays.asList(
+                "Model 3",
+                "Model S",
+                "Model X",
+                "Model Y"
+        ));
+
+        validModelsByMake.put(CarManufacturer.BYD, Arrays.asList(
+                "Atto 3",
+                "Seal",
+                "Dolphin"
+        ));
+
+        validModelsByMake.put(CarManufacturer.NISSAN, Arrays.asList(
+                "Micra",
+                "Sentra",
+                "Altima",
+                "Qashqai",
+                "X-Trail"
+        ));
+
+        validModelsByMake.put(CarManufacturer.MITSUBISHI, Arrays.asList(
+                "Space Star",
+                "ASX",
+                "Outlander"
+        ));
+
+        validModelsByMake.put(CarManufacturer.PEUGEOT, Arrays.asList(
+                "108",
+                "208",
+                "308",
+                "3008",
+                "5008"
+        ));
+    }
+    //-----------------------------------------------------------------------------------
+    //פונקציה סטטית שבודקת האם היצרן של הרכב והמודל של הרכב תקינים
+    public static ValidationResult validateModel(CarManufacturer carType, String userModel) {
+
+        // בדיקת null
+        if (carType == null) {
+            return new ValidationResult("יש לבחור יצרן רכב", false);
+        }
+
+        if (userModel == null || userModel.trim().isEmpty()) {
+            return new ValidationResult("יש להזין דגם רכב", false);
+        }
+
+        List<String> validModels = validModelsByMake.get(carType);
+
+        if (validModels == null) {
+            return new ValidationResult("לא נמצאו דגמים ליצרן שנבחר", false);
+        }
+
+        for (String model : validModels) {
+            if (model.equalsIgnoreCase(userModel.trim())) {
+                return new ValidationResult(null, true);
+            }
+        }
+
+        return new ValidationResult("הדגם אינו שייך ליצרן שנבחר", false);
+    }
 }

@@ -48,6 +48,7 @@ public class SignUp4RenterInfoFragment extends Fragment {
                 Log.d(TAG,"licenseNumber was updated by the view model");
             }
         });
+        //כפתור אחורה
         btnBack.setOnClickListener(v -> {
             Log.d(TAG,"btnBack was clicked");
             vm.onBack();
@@ -65,6 +66,9 @@ public class SignUp4RenterInfoFragment extends Fragment {
             }
             Log.d(TAG,"licenseNumber is valid");
             tvValidationMessage.setVisibility(View.GONE);
+            //יצירת אובייקט מסוג renter
+            vm.createRenter();
+            Log.d(TAG,"RENTER was created");
             vm.onNext();
         });
 

@@ -5,7 +5,9 @@ public enum SignUpStep {
     ADDRESS_DETAILS,//כתובת, עיר
     UserType,//סוג המשתמש
     RENTER_DETAILS,//פרטים על המשכיר
-    SELLER_DETAILS,//פרטים על המוכר
-    REVIEW_DETAILS,//אישור
+    SELLER_DETAILS1,//פרטים על המוכר
+    SELLER_DETAILS2,//פרטים על המוכר
+
+
 
 }

@@ -2,28 +2,94 @@ package com.example.ototocarsrentingapp.model;
 import java.util.Calendar;
 
 public class Car {
-    private CarColor carColor;       // enum צבע הרכב
+    private String carColor;       // enum צבע הרכב
     private String licensePlate;        // מספר רישוי
     private String kilometers;          // קילומטרים
     private int vehicleValueForOneDay;        // שווי הרכב
     private String seatsNumber;         // מספר מקומות ישיבה
-    private CarType carModel;
+    private String carModel;
     private String year;                // שנת רישוי
 
     //----------------
     //constructors
     //----------------
 
-    private Car(String licensePlate, CarColor carColor, String kilometers, int vehicleValue, String seatsNumber, String year, CarType carModel) {
+    public Car(String licensePlate, String carColor, String kilometers, String seatsNumber, String year, String carModel) {
         {
             this.licensePlate = licensePlate;
             this.carColor = carColor;
             this.kilometers = kilometers;
-            this.vehicleValueForOneDay = vehicleValue;
             this.seatsNumber = seatsNumber;
             this.year = year;
             this.carModel = carModel;
         }
+    }
+    public Car() {
+
+    }
+    //פעולות get וset לכל הנתונים
+    // carColor
+    public String getCarColor() {
+        return carColor;
+    }
+
+    public void setCarColor(String carColor) {
+        this.carColor = carColor;
+    }
+
+    // licensePlate
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
+
+    // kilometers
+    public String getKilometers() {
+        return kilometers;
+    }
+
+    public void setKilometers(String kilometers) {
+        this.kilometers = kilometers;
+    }
+
+    // vehicleValueForOneDay
+    public int getVehicleValueForOneDay() {
+        return vehicleValueForOneDay;
+    }
+
+    public void setVehicleValueForOneDay(int vehicleValueForOneDay) {
+        this.vehicleValueForOneDay = vehicleValueForOneDay;
+    }
+
+    // seatsNumber
+    public String getSeatsNumber() {
+        return seatsNumber;
+    }
+
+    public void setSeatsNumber(String seatsNumber) {
+        this.seatsNumber = seatsNumber;
+    }
+
+    // carModel
+    public String getCarModel() {
+        return carModel;
+    }
+
+    public void setCarModel(String carModel) {
+        this.carModel = carModel;
+    }
+
+    // year
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     //לבנות מתודה המחשבת שווי הרכב
     /*
@@ -35,6 +101,4 @@ public class Car {
         this.vehicleValueForOneDay= this.vehicleValueForOneDay/365;//שווי הרכב לפי יום
     }
     */
-
-    }
 }

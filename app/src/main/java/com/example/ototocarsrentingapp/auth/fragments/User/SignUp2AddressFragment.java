@@ -1,4 +1,4 @@
-package com.example.ototocarsrentingapp.auth.fragments;
+package com.example.ototocarsrentingapp.auth.fragments.User;
 
 import android.os.Bundle;
 

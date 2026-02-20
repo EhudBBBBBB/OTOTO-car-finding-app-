@@ -8,8 +8,9 @@ public class Seller extends User  {
                   String email,
                   String address,
                   String city,
-                  UserType userType,Car c) {
-        super(firstName,lastName,email,address,city);
+                  UserType userType,
+                  Car c) {
+        super(firstName,lastName,email,address,city,userType);
         this.car = c;
     }
 

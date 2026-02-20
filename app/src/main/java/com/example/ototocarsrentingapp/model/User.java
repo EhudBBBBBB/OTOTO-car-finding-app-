@@ -15,13 +15,14 @@ public class User {
                String lastName,
                String email,
                String address,
-               String city) {
+               String city,
+                UserType type) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.address = address;
         this.city = city;
-        this.userType = userType;
+        this.userType = type;
     }
 
     public String getFirstName() {
@@ -48,6 +49,9 @@ public class User {
         return userType;
     }
 
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
 
 
 }

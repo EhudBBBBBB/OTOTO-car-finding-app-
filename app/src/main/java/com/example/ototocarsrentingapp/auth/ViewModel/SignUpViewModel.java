@@ -9,11 +9,11 @@ import androidx.lifecycle.MutableLiveData;//שימוש במחלקה mutableliveD
 
 import com.example.ototocarsrentingapp.auth.Validator.Validator;
 import com.example.ototocarsrentingapp.auth.Validator.ValidationResult;
+import com.example.ototocarsrentingapp.model.Car;
 import com.example.ototocarsrentingapp.model.CarColor;
-import com.example.ototocarsrentingapp.model.CarType;
+import com.example.ototocarsrentingapp.model.CarManufacturer;
 import com.example.ototocarsrentingapp.model.Renter;
 import com.example.ototocarsrentingapp.model.Seller;
-import com.example.ototocarsrentingapp.model.User;
 import com.example.ototocarsrentingapp.model.UserType;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -49,9 +49,9 @@ public class SignUpViewModel extends ViewModel {
     private final MutableLiveData<CarColor> carColor = new MutableLiveData<>();
     private final MutableLiveData<String> Kilometers = new MutableLiveData<>();
     private final MutableLiveData<String> year = new MutableLiveData<>();
-    private final MutableLiveData<CarType> carModel = new MutableLiveData<>();
+    private final MutableLiveData<CarManufacturer> carModel = new MutableLiveData<>();
     private final MutableLiveData<String> seatsNumber = new MutableLiveData<>();
-
+    private final MutableLiveData<String> carModelName = new MutableLiveData<>();
 
     //נתונים שצריכים להיות עבור כל renter
     private final MutableLiveData<String> licenseNumber = new MutableLiveData<>();//מספר רישיון
@@ -61,7 +61,7 @@ public class SignUpViewModel extends ViewModel {
 
 
     //-----------------------------------------------------------------------
-    //מתודה שמאפשרת לactivity לעבור לפי מסכים לפי הstate הנוכחי
+    //מתודות שמאפשרת לactivity לעבור לפי מסכים לפי הstate הנוכחי
     public void onNext(){
         // ==========================================================
         // שלב 1: פרטים אישיים
@@ -89,11 +89,12 @@ public class SignUpViewModel extends ViewModel {
                     currentState.setValue(SignUpStep.RENTER_DETAILS);
                 }
                 else{
-                    currentState.setValue(SignUpStep.SELLER_DETAILS);
+                    currentState.setValue(SignUpStep.SELLER_DETAILS1);
                 }
                 break;
-            case REVIEW_DETAILS:
-                break;
+            case SELLER_DETAILS1:
+                currentState.setValue(SignUpStep.SELLER_DETAILS2);
+
         }
     }
 
@@ -114,13 +115,15 @@ public class SignUpViewModel extends ViewModel {
             case RENTER_DETAILS:
                 currentState.setValue(SignUpStep.UserType);
                 break;
-            case SELLER_DETAILS:
+            case SELLER_DETAILS1:
                 currentState.setValue(SignUpStep.UserType);
-            case REVIEW_DETAILS:
+                break;
+            case SELLER_DETAILS2:
+                currentState.setValue(SignUpStep.SELLER_DETAILS1);
                 break;
         }
     }
-
+    //----------------------------------------------------------------------------------------
     //setters and getters
     //נתונים שצריכים להיות לכל USER
 
@@ -216,46 +219,10 @@ public class SignUpViewModel extends ViewModel {
     public LiveData<UserType> getUserType(){
         return this.user_type;
     }
+
     public void setUserType(UserType value){
         this.user_type.setValue(value);
         Log.d(TAG,"user type was changed in the view model");
-        switch(value){
-            case RENTER:
-                Renter r = new Renter(first_name.getValue(),
-                        last_name.getValue(),
-                        email.getValue(),
-                        address.getValue(),
-                        city.getValue(),
-                        licenseNumber.getValue()
-                        );
-                db.collection("renters").document(mAuth.getCurrentUser().getUid()).set(r).
-                 addOnSuccessListener(documentReference -> {
-                Log.d("Firestore", "Document added with ID: " + documentReference);
-            })
-                    .addOnFailureListener(e -> {
-                        Log.e("Firestore", "Error adding document", e);
-                    });
-                break;
-                //יש צורך לבנות את האובייקט מסוג car ולשלוח אותו לבנאי של seller
-                /*
-            case SELLER:
-                Seller s = new Seller(first_name.getValue(),
-                        last_name.getValue(),
-                        email.getValue(),
-                        address.getValue(),
-                        city.getValue(),
-                        );
-                db.collection("sellers").document(mAuth.getCurrentUser().getUid()).set(s).
-                        addOnSuccessListener(documentReference -> {
-                    Log.d("Firestore", "Document added with ID: " + documentReference);
-                })
-                        .addOnFailureListener(e -> {
-                            Log.e("Firestore", "Error adding document", e);
-                        });
-                break;
-                */
-
-        }
     }
 
     //מצב הנוכחי של המשתמש
@@ -267,31 +234,8 @@ public class SignUpViewModel extends ViewModel {
         Log.d(TAG,"The state was changed to"+value+"  in the view model");
     }
 
-    //פונקציה שיוצרת user
-    public void createUser(){
-        String email = get_email().getValue();
-        String password = getPassword().getValue();
-        if (email == null || password == null) {
-            Log.d(TAG,"email or password is null");
-            return;
-        }
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            currentState.setValue(SignUpStep.ADDRESS_DETAILS);
-                            Log.d(TAG,"user was created successfully"+task.getResult());
-                        }
-                        else{
-                            Log.e(TAG,"user was not created successfully"+task.getException().getMessage());
-                            //לשלוח שגיאה למסך
-                        }
-                    }
-                });
-        //פעולות set וget RENTER
-        //-------------------------------------------------------------------
-        }
+    //פעולות set וget RENTER
+    //-------------------------------------------------------------------
         //license number(driver)
         public LiveData<String> getLicenseNumber(){
             return this.licenseNumber;
@@ -337,7 +281,112 @@ public class SignUpViewModel extends ViewModel {
         }
         return result;
     }
+    //carColor
+    public void setCarColor(CarColor carColor) {
+        this.carColor.setValue(carColor);
+        Log.d(TAG,"color was updated in the view model");
     }
+
+    public LiveData<CarColor> getCarColor() {
+        return carColor;
+    }
+    //carModel
+    public void setCarType(CarManufacturer carModel) {
+        this.carModel.setValue(carModel);
+        Log.d(TAG,"model was updated in the view model");
+    }
+
+    public LiveData<CarManufacturer> getCarModel() {
+        return carModel;
+    }
+    //seatsNumbers
+    public ValidationResult setSeatsNumber(String seatsNumber) {
+        ValidationResult result = Validator.validateSeatsNumbers(seatsNumber);
+        if(result.getIsValid()){
+            this.seatsNumber.setValue(seatsNumber);
+        }
+        return result;
+    }
+    public LiveData<String> getSeatsNumber() {
+        return seatsNumber;
+    }
+    // getCarModelName
+    public MutableLiveData<String> getCarModelName() {
+        return carModelName;
+    }
+
+    public ValidationResult setCarModelName(String modelName) {
+        ValidationResult result = Validator.validateModel(carModel.getValue(),modelName);
+        if(result.getIsValid()){
+            this.carModelName.setValue(modelName);
+        }
+        return result;
+    }
+    //-----------------------------------------------------------------------------------
+    //פונקציה שיוצרת user
+    public void createUser(){
+        String email = get_email().getValue();
+        String password = getPassword().getValue();
+        if (email == null || password == null) {
+            Log.d(TAG,"email or password is null");
+            return;
+        }
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            currentState.setValue(SignUpStep.ADDRESS_DETAILS);
+                            Log.d(TAG,"user was created successfully"+task.getResult());
+                        }
+                        else{
+                            Log.e(TAG,"user was not created successfully"+task.getException().getMessage());
+                            //לשלוח שגיאה למסך
+                        }
+                    }
+                });
+    }
+    //פונקציה שיוצרת RENTER
+    public void createRenter(){
+        Renter r = new Renter(first_name.getValue(),
+                last_name.getValue(),
+                email.getValue(),
+                address.getValue(),
+                city.getValue(),
+                licenseNumber.getValue(),
+                user_type.getValue()
+        );
+        db.collection("renters").document(mAuth.getCurrentUser().getUid()).set(r).
+                addOnSuccessListener(documentReference -> {
+                    Log.d("Firestore", "Document added with ID: " + documentReference);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error adding document", e);
+                });
+    }
+    //פונקציה שיוצרת אובייקט מסוג CAR
+    public Car createCar(String licensePlate, String carColor, String kilometers, String seatsNumber, String year, String carModel ){
+        return new Car(licensePlate,carColor,kilometers,seatsNumber,year,carModel);
+    }
+    //פונקציה שיוצרת אובביקט מסוג SELLER
+    public void createSeller(){
+        Seller s = new Seller(first_name.getValue(),
+                last_name.getValue(),
+                email.getValue(),
+                address.getValue(),
+                city.getValue(),
+                user_type.getValue(),
+                createCar(licensePlate.getValue(),carColor.getValue().name(),Kilometers.getValue(),seatsNumber.getValue(),year.getValue(),carModel.getValue().name())
+        );
+        db.collection("sellers").document(mAuth.getCurrentUser().getUid()).set(s).
+                addOnSuccessListener(documentReference -> {
+                    Log.d("Firestore", "Document added with ID: " + documentReference);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error adding document", e);
+                });
+    }
+}
 
 
 

@@ -11,11 +11,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.ototocarsrentingapp.R;
 import com.example.ototocarsrentingapp.auth.ViewModel.SignUpViewModel;
 
-import com.example.ototocarsrentingapp.auth.fragments.SignUp1PersonalInfoFragment;
-import com.example.ototocarsrentingapp.auth.fragments.SignUp2AddressFragment;
-import com.example.ototocarsrentingapp.auth.fragments.SignUp3UserTypeFragment;
+import com.example.ototocarsrentingapp.auth.fragments.User.SignUp1PersonalInfoFragment;
+import com.example.ototocarsrentingapp.auth.fragments.User.SignUp2AddressFragment;
+import com.example.ototocarsrentingapp.auth.fragments.User.SignUp3UserTypeFragment;
 import com.example.ototocarsrentingapp.auth.fragments.renter.SignUp4RenterInfoFragment;
 import com.example.ototocarsrentingapp.auth.fragments.seller.SignUp5SellerInfoFragment;
+import com.example.ototocarsrentingapp.auth.fragments.seller.SignUp6SellerInfoFragment;
 
 public class AuthActivity extends AppCompatActivity {
     private static final String TAG = "AuthActivity";
@@ -49,8 +50,11 @@ public class AuthActivity extends AppCompatActivity {
                 case RENTER_DETAILS:
                     fragmnet = new SignUp4RenterInfoFragment();
                     break;
-                case SELLER_DETAILS:
+                case SELLER_DETAILS1:
                     fragmnet = new SignUp5SellerInfoFragment();
+                    break;
+                case SELLER_DETAILS2:
+                    fragmnet = new SignUp6SellerInfoFragment();
                     break;
                 default:
                     fragmnet = new SignUp1PersonalInfoFragment();

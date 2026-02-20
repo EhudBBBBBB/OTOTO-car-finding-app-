@@ -2,65 +2,163 @@ package com.example.ototocarsrentingapp.auth.fragments.seller;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.ototocarsrentingapp.R;
+import com.example.ototocarsrentingapp.auth.Validator.ValidationResult;
+import com.example.ototocarsrentingapp.auth.ViewModel.SignUpViewModel;
+import com.example.ototocarsrentingapp.model.CarColor;
+import com.example.ototocarsrentingapp.model.CarManufacturer;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SignUp6SellerInfoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class SignUp6SellerInfoFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "SignUp6SellerInfoFragment";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public SignUp6SellerInfoFragment() {
-        // Required empty public constructor
+        super(R.layout.fragment_sign_up6_seller_info);
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SignUp6SellerInfoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SignUp6SellerInfoFragment newInstance(String param1, String param2) {
-        SignUp6SellerInfoFragment fragment = new SignUp6SellerInfoFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
+
+
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        EditText seatsNumber = view.findViewById(R.id.seatsNumber);//מספר מכוניות
+        Spinner colorSpinner = view.findViewById(R.id.colorSpinner);//סוג רכב
+        Spinner carsModelSpinner = view.findViewById(R.id.carsModelSpinner);//סוג רכב
+        EditText carModel = view.findViewById(R.id.carModel);//דגם
+
+        Button btnNext = view.findViewById(R.id.btnNext);
+        Button btnBack = view.findViewById(R.id.btnBack);
+        TextView tvValidationMessage = view.findViewById(R.id.tvValidationMessage);
+
+        SignUpViewModel vm = new ViewModelProvider(requireActivity()).get(SignUpViewModel.class);//חיבור לview model
+
+        //listening to seats numbers
+        vm.getSeatsNumber().observe(getViewLifecycleOwner(), seats ->{
+            if(seats==null){
+                return;
+            }
+            String current = seatsNumber.getText().toString();
+            if(!current.equals(seats)){//בדיקה האם הערך שהמשתמש הקליד זהה לערך בview model
+                seatsNumber.setText(seats);
+                seatsNumber.setSelection(seats.length());
+                Log.d(TAG,"seatsNumber was updated by the view model");
+            }
+        });
+        //listening to color
+        vm.getCarColor().observe(getViewLifecycleOwner(), color ->{
+            if(color==null){
+                return;
+            }
+            String current = colorSpinner.getSelectedItem().toString();
+            String colorString = color.name();//המרת enum לstring
+            if(!current.equals(colorString)){//בדיקה האם הערך שהמשתמש הקליד זהה לערך בview model
+                colorSpinner.setSelection(color.ordinal());
+                Log.d(TAG,"color was updated by the view model");
+            }
+        });
+        //listening to model
+        vm.getCarModel().observe(getViewLifecycleOwner(), model ->{
+            if(model==null){
+                return;
+            }
+            String current = carsModelSpinner.getSelectedItem().toString();
+            String modelString = model.name();//המרת enum לstring
+            if(!current.equals(modelString)){//בדיקה האם הערך שהמשתמש הקליד זהה לערך בview model
+                carsModelSpinner.setSelection(model.ordinal());
+                Log.d(TAG,"model was updated by the view model");
+            }
+        });
+        colorSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    return;
+                }
+                String color = parent.getItemAtPosition(position).toString();
+                CarColor carColor = CarColor.valueOf(color);
+                vm.setCarColor(carColor);
+                Log.d(TAG,"color was changed in the view model");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                vm.setCarColor(CarColor.לבן);
+            }
+        });
+
+        carsModelSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    return;
+                }
+                String model = parent.getItemAtPosition(position).toString();
+                CarManufacturer carModel = CarManufacturer.valueOf(model);
+                vm.setCarType(carModel);
+                Log.d(TAG,"model was changed in the view model");
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_up6_seller_info, container, false);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                vm.setCarType(CarManufacturer.FIAT);
+            }
+        });
+        //כפתור קדימה
+        btnNext.setOnClickListener(v -> {
+            Log.d(TAG,"btnNext was clicked");
+
+            //בדיקה שמספר המושבים תקין
+            ValidationResult r = vm.setSeatsNumber(seatsNumber.getText().toString());
+            if(!r.getIsValid()){
+                Log.d(TAG,"Seats Numbers is not valid");
+                tvValidationMessage.setText(r.getErrorMessage());
+                seatsNumber.requestFocus();
+                tvValidationMessage.setVisibility(View.VISIBLE);
+                return;
+            }
+            tvValidationMessage.setVisibility(View.GONE);
+
+            //בדיקה שדגם הרכב תקין
+            r = vm.setCarModelName(carModel.getText().toString());
+            if(!r.getIsValid()){
+                Log.d(TAG,"Car Model is not valid");
+                tvValidationMessage.setText(r.getErrorMessage());
+                carModel.requestFocus();
+                tvValidationMessage.setVisibility(View.VISIBLE);
+                return;
+            }
+            Log.d(TAG,"Car Model is valid");
+            tvValidationMessage.setVisibility(View.GONE);
+
+            //יצירת אובייקט מסוג SELLER בFIRE BASE
+            vm.createSeller();
+            Log.d(TAG,"Seller was created successfully");
+
+            //מעבר לדף הבא
+            vm.onNext();
+
+        });
+        //כפתור אחורה
+        btnBack.setOnClickListener(v -> {
+            Log.d(TAG,"btnBack was clicked");
+            vm.onBack();
+        });
     }
 }
